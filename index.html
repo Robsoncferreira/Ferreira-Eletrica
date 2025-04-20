@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4472C4">
+    <title>Ferreira Elétrica - App de Orçamentos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="img/favicon.png">
+    <link rel="apple-touch-icon" href="img/icon-192x192.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="img/logo.png" alt="Ferreira Elétrica">
+                <h1>Ferreira Elétrica</h1>
+            </div>
+        </header>
+
+        <div class="content">
+            <div id="home-screen" class="screen active">
+                <div class="card">
+                    <div class="card-title">Orçamentos Recentes</div>
+                    <div id="recent-quotes" class="list">
+                        <!-- Lista de orçamentos recentes será carregada dinamicamente -->
+                        <div class="list-item">
+                            <div>
+                                <div class="list-item-title">Carregando orçamentos...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button id="new-quote-btn" class="btn btn-primary btn-block">Novo Orçamento</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Estatísticas</div>
+                    <div class="list-item">
+                        <div class="list-item-title">Orçamentos Pendentes</div>
+                        <div id="pending-count" class="status status-pending">0</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">Orçamentos Aprovados</div>
+                        <div id="approved-count" class="status status-approved">0</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">Taxa de Conversão</div>
+                        <div id="conversion-rate">0%</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Ações Rápidas</div>
+                    <div class="btn-group">
+                        <button id="sync-btn" class="btn btn-primary">Sincronizar</button>
+                        <button id="settings-btn" class="btn btn-primary">Configurações</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="new-quote-screen" class="screen">
+                <div class="card">
+                    <div class="card-title">Novo Orçamento</div>
+                    <form id="quote-form">
+                        <div class="tabs">
+                            <div class="tab active" data-tab="client-tab">Cliente</div>
+                            <div class="tab" data-tab="services-tab">Serviços</div>
+                            <div class="tab" data-tab="materials-tab">Materiais</div>
+                            <div class="tab" data-tab="photos-tab">Fotos</div>
+                            <div class="tab" data-tab="summary-tab">Resumo</div>
+                        </div>
+
+                        <div id="client-tab" class="tab-content active">
+                            <div class="form-group">
+                                <label for="client-name">Nome do Cliente</label>
+                                <input type="text" id="client-name" name="client-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="client-phone">Telefone</label>
+                                <input type="tel" id="client-phone" name="client-phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="client-email">E-mail</label>
+                                <input type="email" id="client-email" name="client-email">
+                            </div>
+                            <div class="form-group">
+                                <label for="client-address">Endereço</label>
+                                <textarea id="client-address" name="client-address" rows="3" required></textarea>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary btn-block next-tab">Próximo</button>
+                            </div>
+                        </div>
+
+                        <div id="services-tab" class="tab-content">
+                            <div class="form-group">
+                                <label for="service-type">Tipo de Serviço</label>
+                                <select id="service-type" name="service-type">
+                                    <option value="">Selecione o tipo de serviço</option>
+                                    <option value="installation">Instalação Elétrica</option>
+                                    <option value="lighting">Iluminação</option>
+                                    <option value="automation">Automação</option>
+                                    <option value="commercial">Comercial</option>
+                                    <option value="maintenance">Manutenção</option>
+                                </select>
+                            </div>
+                            <div id="services-list">
+                                <!-- Serviços serão adicionados dinamicamente -->
+                            </div>
+                            <button type="button" id="add-service-btn" class="btn btn-primary btn-block">Adicionar Serviço</button>
+                            <div class="total-row">
+                                <div>Total Serviços:</div>
+                                <div id="services-total">R$ 0,00</div>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-warning prev-tab">Anterior</button>
+                                <button type="button" class="btn btn-primary next-tab">Próximo</button>
+                            </div>
+                        </div>
+
+                        <div id="materials-tab" class="tab-content">
+                            <div id="materials-list">
+                                <!-- Materiais serão adicionados dinamicamente -->
+                            </div>
+                            <button type="button" id="add-material-btn" class="btn btn-primary btn-block">Adicionar Material</button>
+                            <div class="total-row">
+                                <div>Total Materiais:</div>
+                                <div id="materials-total">R$ 0,00</div>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-warning prev-tab">Anterior</button>
+                                <button type="button" class="btn btn-primary next-tab">Próximo</button>
+                            </div>
+                        </div>
+
+                        <div id="photos-tab" class="tab-content">
+                            <div class="form-group">
+                                <label>Fotos do Local</label>
+                                <div class="camera-container">
+                                    <video id="camera-feed" class="camera-feed" autoplay playsinline></video>
+                                    <div class="camera-controls">
+                                        <button type="button" id="take-photo-btn" class="camera-btn">
+                                            <i class="fas fa-camera"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="photos-preview">
+                                    <!-- Fotos capturadas serão exibidas aqui -->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="notes">Observações</label>
+                                <textarea id="notes" name="notes" rows="3"></textarea>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-warning prev-tab">Anterior</button>
+                                <button type="button" class="btn btn-primary next-tab">Próximo</button>
+                            </div>
+                        </div>
+
+                        <div id="summary-tab" class="tab-content">
+                            <div class="form-group">
+                                <label>Resumo do Orçamento</label>
+                                <div class="list-item">
+                                    <div class="list-item-title">Cliente</div>
+                                    <div id="summary-client"></div>
+                                </div>
+                                <div class="list-item">
+                                    <div class="list-item-title">Total Serviços</div>
+                                    <div id="summary-services-total">R$ 0,00</div>
+                                </div>
+                                <div class="list-item">
+                                    <div class="list-item-title">Total Materiais</div>
+                                    <div id="summary-materials-total">R$ 0,00</div>
+                                </div>
+                                <div class="list-item">
+                                    <div class="list-item-title">Total Geral</div>
+                                    <div id="summary-total">R$ 0,00</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Assinatura do Cliente</label>
+                                <canvas id="signature-pad" class="signature-pad"></canvas>
+                                <button type="button" id="clear-signature-btn" class="btn btn-warning btn-block">Limpar Assinatura</button>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-warning prev-tab">Anterior</button>
+                                <button type="submit" class="btn btn-success">Finalizar Orçamento</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="quote-details-screen" class="screen">
+                <div class="card">
+                    <div class="card-title">Detalhes do Orçamento</div>
+                    <div id="quote-details">
+                        <!-- Detalhes do orçamento serão carregados dinamicamente -->
+                    </div>
+                    <div class="btn-group">
+                        <button id="back-to-home-btn" class="btn btn-warning">Voltar</button>
+                        <button id="share-quote-btn" class="btn btn-primary">Compartilhar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="settings-screen" class="screen">
+                <div class="card">
+                    <div class="card-title">Configurações</div>
+                    <form id="settings-form">
+                        <div class="form-group">
+                            <label for="company-name">Nome da Empresa</label>
+                            <input type="text" id="company-name" name="company-name" value="Ferreira Elétrica">
+                        </div>
+                        <div class="form-group">
+                            <label for="company-phone">Telefone</label>
+                            <input type="tel" id="company-phone" name="company-phone" value="(XX) XXXXX-XXXX">
+                        </div>
+                        <div class="form-group">
+                            <label for="company-email">E-mail</label>
+                            <input type="email" id="company-email" name="company-email" value="contato@ferreiraeletrica.com.br">
+                        </div>
+                        <div class="form-group">
+                            <label for="quote-validity">Validade dos Orçamentos (dias)</label>
+                            <input type="number" id="quote-validity" name="quote-validity" value="15">
+                        </div>
+                        <div class="form-group">
+                            <label for="sync-frequency">Frequência de Sincronização</label>
+                            <select id="sync-frequency" name="sync-frequency">
+                                <option value="manual">Manual</option>
+                                <option value="daily" selected>Diária</option>
+                                <option value="realtime">Tempo Real</option>
+                            </select>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" id="settings-back-btn" class="btn btn-warning">Voltar</button>
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <a href="#" class="footer-btn" data-screen="home-screen">
+                <i class="fas fa-home"></i>
+                <span>Início</span>
+            </a>
+            <a href="#" class="footer-btn" data-screen="new-quote-screen">
+                <i class="fas fa-plus-circle"></i>
+                <span>Novo</span>
+            </a>
+            <a href="#" class="footer-btn" data-screen="settings-screen">
+                <i class="fas fa-cog"></i>
+                <span>Config</span>
+            </a>
+        </footer>
+    </div>
+
+    <!-- Modal para adicionar serviço -->
+    <div id="service-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Adicionar Serviço</div>
+            <div class="form-group">
+                <label for="service-description">Descrição</label>
+                <input type="text" id="service-description" name="service-description">
+            </div>
+            <div class="form-group">
+                <label for="service-quantity">Quantidade</label>
+                <input type="number" id="service-quantity" name="service-quantity" value="1" min="1">
+            </div>
+            <div class="form-group">
+                <label for="service-unit">Unidade</label>
+                <select id="service-unit" name="service-unit">
+                    <option value="un">Unidade</option>
+                    <option value="m">Metro</option>
+                    <option value="m²">Metro Quadrado</option>
+                    <option value="h">Hora</option>
+                    <option value="diária">Diária</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="service-price">Valor Unitário (R$)</label>
+                <input type="number" id="service-price" name="service-price" step="0.01" min="0">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancel-service-btn" class="btn btn-warning">Cancelar</button>
+                <button type="button" id="save-service-btn" class="btn btn-success">Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar material -->
+    <div id="material-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Adicionar Material</div>
+            <div class="form-group">
+                <label for="material-description">Descrição</label>
+                <input type="text" id="material-description" name="material-description">
+            </div>
+            <div class="form-group">
+                <label for="material-quantity">Quantidade</label>
+                <input type="number" id="material-quantity" name="material-quantity" value="1" min="1">
+            </div>
+            <div class="form-group">
+                <label for="material-unit">Unidade</label>
+                <select id="material-unit" name="material-unit">
+                    <option value="un">Unidade</option>
+                    <option value="m">Metro</option>
+                    <option value="kg">Quilograma</option>
+                    <option value="pç">Peça</option>
+                    <option value="cx">Caixa</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="material-price">Valor Unitário (R$)</label>
+                <input type="number" id="material-price" name="material-price" step="0.01" min="0">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancel-material-btn" class="btn btn-warning">Cancelar</button>
+                <button type="button" id="save-material-btn" class="btn btn-success">Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Indicador de carregamento -->
+    <div class="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Toast para mensagens -->
+    <div id="toast" class="toast"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/quote.js"></script>
+    <script>
+        // Registrar service worker para PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(reg => console.log('Service Worker registrado com sucesso', reg))
+                .catch(err => console.log('Erro ao registrar Service Worker', err));
+        }
+    </script>
+</body>
+</html>
